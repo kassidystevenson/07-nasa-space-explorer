@@ -142,7 +142,7 @@ window.addEventListener('DOMContentLoaded', () => {
   fetchNasaImages(startStr, endStr);
 });
 
-// Modal elements
+// Modal elements for displaying the enlarged APOD image and details
 const modal = document.getElementById('apodModal');
 const modalImg = document.getElementById('apodModalImg');
 const modalTitle = document.getElementById('apodModalTitle');
@@ -152,17 +152,17 @@ const modalClose = document.getElementById('apodModalClose');
 
 // Function to open the modal with APOD details
 function openModal(item) {
-  // Set modal content
+  // Use HD image if available, otherwise use standard image
   modalImg.src = item.hdurl || item.url;
   modalImg.alt = item.title;
   modalTitle.textContent = item.title;
   modalDate.textContent = formatDisplayDate(item.date);
   modalExplanation.textContent = item.explanation;
-  // Show modal
+  // Show the modal
   modal.style.display = 'flex';
 }
 
-// Function to close the modal
+// Function to close the modal and clear its content
 function closeModal() {
   modal.style.display = 'none';
   modalImg.src = '';
@@ -171,10 +171,10 @@ function closeModal() {
   modalExplanation.textContent = '';
 }
 
-// Close modal on close button click
+// Event listener for close button
 modalClose.addEventListener('click', closeModal);
 
-// Close modal when clicking outside the modal content
+// Event listener for clicking outside the modal content to close
 modal.addEventListener('click', (event) => {
   if (event.target === modal) {
     closeModal();
