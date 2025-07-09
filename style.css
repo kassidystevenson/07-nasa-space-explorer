@@ -9,7 +9,7 @@
 body {
   background: #0b0d17;
   color: #fff;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Inter', 'Helvetica Neue', Helvetica, 'Public Sans', Arial, sans-serif;
   margin: 0;
   min-height: 100vh;
 }
@@ -41,7 +41,7 @@ body {
 }
 
 .site-header h1 {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, 'Inter', 'Public Sans', Arial, sans-serif;
   font-weight: 700;
   color: #fff;
   letter-spacing: 2px;
@@ -74,7 +74,7 @@ body {
   border-radius: 6px;
   padding: 8px 12px;
   font-size: 1rem;
-  font-family: inherit;
+  font-family: 'Inter', 'Helvetica Neue', Helvetica, 'Public Sans', Arial, sans-serif;
 }
 
 .filters button {
@@ -88,7 +88,7 @@ body {
   letter-spacing: 1px;
   cursor: pointer;
   transition: background 0.2s;
-  font-family: inherit;
+  font-family: 'Inter', 'Helvetica Neue', Helvetica, 'Public Sans', Arial, sans-serif;
   box-shadow: 0 2px 8px rgba(60,60,60,0.10);
 }
 
@@ -108,7 +108,7 @@ body {
   padding: 32px 0;
   margin-top: 32px;
   letter-spacing: 1px;
-  font-family: inherit;
+  font-family: 'Inter', 'Helvetica Neue', Helvetica, 'Public Sans', Arial, sans-serif;
 }
 
 /* Gallery flex container */
@@ -189,6 +189,7 @@ body {
   max-width: 100%;
   border: 2px solid #2d3a5a;
   transition: box-shadow 0.2s, border 0.2s;
+  font-family: 'Inter', 'Helvetica Neue', Helvetica, 'Public Sans', Arial, sans-serif;
 }
 
 .apod-card:hover {
@@ -208,12 +209,12 @@ body {
 
 /* Title style */
 .apod-title {
+  font-family: 'Helvetica Neue', Helvetica, 'Inter', 'Public Sans', Arial, sans-serif;
   font-weight: bold;
   font-size: 1.15rem;
   color: #fff;
   margin: 18px 0 0 0;
   padding: 0 18px 0 18px;
-  font-family: inherit;
   letter-spacing: 0.5px;
 }
 
@@ -223,7 +224,7 @@ body {
   font-size: 1rem;
   margin: 8px 0 18px 0;
   padding: 0 18px 0 18px;
-  font-family: inherit;
+  font-family: 'DM Mono', 'Public Sans', 'Inter', 'Helvetica Neue', Helvetica, Arial, monospace;
   letter-spacing: 0.5px;
 }
 
