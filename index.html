@@ -29,5 +29,16 @@
 
   <script src="js/dateRange.js"></script>
   <script src="js/script.js"></script>
+
+  <!-- Modal for enlarged APOD image and details -->
+  <div id="apodModal" class="apod-modal" style="display:none;">
+    <div class="apod-modal-content">
+      <button id="apodModalClose" class="apod-modal-close" aria-label="Close">&times;</button>
+      <img id="apodModalImg" class="apod-modal-img" src="" alt="" />
+      <div class="apod-modal-title" id="apodModalTitle"></div>
+      <div class="apod-modal-date" id="apodModalDate"></div>
+      <div class="apod-modal-explanation" id="apodModalExplanation"></div>
+    </div>
+  </div>
 </body>
 </html>

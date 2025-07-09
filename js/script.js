@@ -76,6 +76,9 @@ async function fetchNasaImages(startDate, endDate) {
       dateDiv.textContent = formatDisplayDate(item.date);
       card.appendChild(dateDiv);
 
+      // When the card is clicked, open the modal with details
+      card.addEventListener('click', () => openModal(item));
+
       // Add the card to the grid
       grid.appendChild(card);
     });
@@ -137,4 +140,43 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Fetch and display the images
   fetchNasaImages(startStr, endStr);
+});
+
+// Modal elements
+const modal = document.getElementById('apodModal');
+const modalImg = document.getElementById('apodModalImg');
+const modalTitle = document.getElementById('apodModalTitle');
+const modalDate = document.getElementById('apodModalDate');
+const modalExplanation = document.getElementById('apodModalExplanation');
+const modalClose = document.getElementById('apodModalClose');
+
+// Function to open the modal with APOD details
+function openModal(item) {
+  // Set modal content
+  modalImg.src = item.hdurl || item.url;
+  modalImg.alt = item.title;
+  modalTitle.textContent = item.title;
+  modalDate.textContent = formatDisplayDate(item.date);
+  modalExplanation.textContent = item.explanation;
+  // Show modal
+  modal.style.display = 'flex';
+}
+
+// Function to close the modal
+function closeModal() {
+  modal.style.display = 'none';
+  modalImg.src = '';
+  modalTitle.textContent = '';
+  modalDate.textContent = '';
+  modalExplanation.textContent = '';
+}
+
+// Close modal on close button click
+modalClose.addEventListener('click', closeModal);
+
+// Close modal when clicking outside the modal content
+modal.addEventListener('click', (event) => {
+  if (event.target === modal) {
+    closeModal();
+  }
 });
