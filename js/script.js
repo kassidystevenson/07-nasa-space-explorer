@@ -7,8 +7,22 @@ const gridContainer = document.getElementById('imageGrid');
 // Find the button and date inputs
 const getImagesBtn = document.getElementById('getImagesBtn');
 
-// Function to fetch images from NASA APOD API
+// Function to format date as "Month Day, Year"
+function formatDisplayDate(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+// Helper function to get a date string in YYYY-MM-DD format
+function formatDate(date) {
+  return date.toISOString().split('T')[0];
+}
+
+// Function to fetch only images from NASA APOD API
 async function fetchNasaImages(startDate, endDate) {
+  // Show a loading message while fetching
+  gridContainer.innerHTML = `<div class="loading-message">🔄 Loading space photos…</div>`;
+
   // Build the API URL with the date range and API key
   const url = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}&start_date=${startDate}&end_date=${endDate}`;
 
@@ -16,41 +30,41 @@ async function fetchNasaImages(startDate, endDate) {
     // Fetch data from the API
     const response = await fetch(url);
     // Parse the JSON data
-    const data = await response.json();
+    let data = await response.json();
 
-    // Clear any previous images
-    gridContainer.innerHTML = '';
+    // Filter out videos, keep only images
+    data = data.filter(item => item.media_type === 'image');
 
-    // Make sure we only show 9 items (for a 3x3 grid)
+    // Sort by date descending (latest first)
+    data.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    // Only show up to 9 images for the 3x3 grid
     const imagesToShow = data.slice(0, 9);
+
+    // If no images, show a message
+    if (imagesToShow.length === 0) {
+      gridContainer.innerHTML = `<div class="error">No images found for this date range. Try a different range!</div>`;
+      return;
+    }
 
     // Create a grid container for the cards
     const grid = document.createElement('div');
     grid.className = 'apod-grid';
 
-    // Loop through each item in the data (up to 9)
+    // Loop through each image and create a card
     imagesToShow.forEach(item => {
-      // Create a card for each image or video
+      // Create a card for each image
       const card = document.createElement('div');
       card.className = 'apod-card';
 
-      // Check if the media is an image
-      if (item.media_type === 'image') {
-        // Create an image element
-        const img = document.createElement('img');
-        img.src = item.url;
-        img.alt = item.title;
-        img.className = 'apod-image';
-        card.appendChild(img);
-      } else {
-        // If it's not an image (e.g., a video), show a placeholder
-        const placeholder = document.createElement('div');
-        placeholder.className = 'video-placeholder';
-        placeholder.textContent = 'Video: ' + item.title;
-        card.appendChild(placeholder);
-      }
+      // Create an image element
+      const img = document.createElement('img');
+      img.src = item.url;
+      img.alt = item.title;
+      img.className = 'apod-image';
+      card.appendChild(img);
 
-      // Add the title below the image or placeholder
+      // Add the title below the image
       const caption = document.createElement('div');
       caption.className = 'apod-title';
       caption.textContent = item.title;
@@ -67,22 +81,12 @@ async function fetchNasaImages(startDate, endDate) {
     });
 
     // Add the grid to the main container
+    gridContainer.innerHTML = '';
     gridContainer.appendChild(grid);
   } catch (error) {
     // Show an error message if something goes wrong
     gridContainer.innerHTML = `<div class="error">Failed to load images. Please try again later.</div>`;
   }
-}
-
-// Helper function to get a date string in YYYY-MM-DD format
-function formatDate(date) {
-  return date.toISOString().split('T')[0];
-}
-
-// Function to format date as "Month Day, Year"
-function formatDisplayDate(dateStr) {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
 // Function to load images for a given date range
@@ -114,3 +118,23 @@ const endInput = document.getElementById('endDate');
 setupDateInputs(startInput, endInput);
 // - Restrict dates to NASA's image archive (starting from 1995)
 setupDateInputs(startInput, endInput);
+
+// Load the last 9 days of images by default on page load
+window.addEventListener('DOMContentLoaded', () => {
+  // Get today's date
+  const endDate = new Date();
+  // Get the date 8 days ago (so we have 9 days total)
+  const startDate = new Date();
+  startDate.setDate(endDate.getDate() - 8);
+
+  // Format dates as YYYY-MM-DD
+  const startStr = formatDate(startDate);
+  const endStr = formatDate(endDate);
+
+  // Set the date pickers to these values
+  startInput.value = startStr;
+  endInput.value = endStr;
+
+  // Fetch and display the images
+  fetchNasaImages(startStr, endStr);
+});
