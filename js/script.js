@@ -79,6 +79,14 @@ async function fetchNasaImages(startDate, endDate) {
       // When the card is clicked, open the modal with details
       card.addEventListener('click', () => openModal(item));
 
+      // Also allow clicking the image itself to open the modal
+      // This helps beginners see how to add event listeners to different elements
+      img.addEventListener('click', (event) => {
+        openModal(item);
+        // Prevent the card's click event from firing again
+        event.stopPropagation();
+      });
+
       // Add the card to the grid
       grid.appendChild(card);
     });
@@ -122,27 +130,8 @@ setupDateInputs(startInput, endInput);
 // - Restrict dates to NASA's image archive (starting from 1995)
 setupDateInputs(startInput, endInput);
 
-// Load the last 9 days of images by default on page load
-window.addEventListener('DOMContentLoaded', () => {
-  // Get today's date
-  const endDate = new Date();
-  // Get the date 8 days ago (so we have 9 days total)
-  const startDate = new Date();
-  startDate.setDate(endDate.getDate() - 8);
 
-  // Format dates as YYYY-MM-DD
-  const startStr = formatDate(startDate);
-  const endStr = formatDate(endDate);
-
-  // Set the date pickers to these values
-  startInput.value = startStr;
-  endInput.value = endStr;
-
-  // Fetch and display the images
-  fetchNasaImages(startStr, endStr);
-});
-
-// Modal elements for displaying the enlarged APOD image and details
+// Modal elements for the APOD popup
 const modal = document.getElementById('apodModal');
 const modalImg = document.getElementById('apodModalImg');
 const modalTitle = document.getElementById('apodModalTitle');
@@ -152,17 +141,18 @@ const modalClose = document.getElementById('apodModalClose');
 
 // Function to open the modal with APOD details
 function openModal(item) {
-  // Use HD image if available, otherwise use standard image
+  // Debug: log when modal is opened
+  console.log('Modal opened!', item);
+  // Set modal content
   modalImg.src = item.hdurl || item.url;
   modalImg.alt = item.title;
   modalTitle.textContent = item.title;
   modalDate.textContent = formatDisplayDate(item.date);
   modalExplanation.textContent = item.explanation;
-  // Show the modal
   modal.style.display = 'flex';
 }
 
-// Function to close the modal and clear its content
+// Function to close the modal
 function closeModal() {
   modal.style.display = 'none';
   modalImg.src = '';
@@ -171,12 +161,24 @@ function closeModal() {
   modalExplanation.textContent = '';
 }
 
-// Event listener for close button
-modalClose.addEventListener('click', closeModal);
+// Use a single DOMContentLoaded event to set up everything
+document.addEventListener('DOMContentLoaded', () => {
+  // Set up modal event listeners
+  modalClose.addEventListener('click', closeModal);
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
+  modalImg.addEventListener('click', closeModal);
 
-// Event listener for clicking outside the modal content to close
-modal.addEventListener('click', (event) => {
-  if (event.target === modal) {
-    closeModal();
-  }
+  // Set up default date range and load images
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(endDate.getDate() - 8);
+  const startStr = formatDate(startDate);
+  const endStr = formatDate(endDate);
+  startInput.value = startStr;
+  endInput.value = endStr;
+  fetchNasaImages(startStr, endStr);
 });
